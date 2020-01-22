@@ -44,7 +44,8 @@ namespace Server
             {
                 endpoints.MapControllers();
             });
-            new Thread(Socket.Map.Hosts.StartServer) { IsBackground = true }.Start();
+            //new Thread(Socket.Map.Hosts.StartServer) { IsBackground = true }.Start();
+            new Thread(new Socket.Map.ConnentHost().StartServer) { IsBackground = true }.Start();
         }
     }
 }

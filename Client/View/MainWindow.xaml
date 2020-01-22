@@ -4,9 +4,159 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.View"
-        mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800">
-    <Grid>
+        xmlns:conv="clr-namespace:Client.Convers"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
+        xmlns:domain ="clr-namespace:Client.Model"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        mc:Ignorable="d" Height="900" Width="1440"
+        WindowStartupLocation="CenterScreen"
+        Title="{Binding Title}" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <conv:FlowConver x:Key="cvt1"/>
+            <conv:EnableConver x:Key="cvt2"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid >
+        <Grid >
+            <Grid>
+                <Grid.Background>
+                    <ImageBrush Opacity="0.3" ImageSource="/Client;component/Img/1.jpg"/>
+                </Grid.Background>
+            </Grid>
+            <materialDesign:DialogHost Identifier="RootDialog" >
+                <Grid>
+                    <StackPanel Margin="10" >
+                        <Grid>
+                            <StackPanel Orientation="Horizontal"  Margin="10 0" HorizontalAlignment="Left">
+                                <TextBlock Text="服务器:" VerticalAlignment="Center" Margin="10"></TextBlock>
+                                <TextBox Text="{Binding ConnentIP.OutIP,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100" VerticalAlignment="Center" Margin="10"
+                                         IsEnabled="{Binding ConnentIP.State,Converter={StaticResource cvt2},ConverterParameter=0}"></TextBox>
+                                <Button Command="{Binding ConnectCommand}" Content="连接" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="60"/>
+                                <Button Command="{Binding DisConnectCommand}" Content="停止" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="60"/>
+                            </StackPanel>
 
+                            <StackPanel Orientation="Horizontal" Margin="10 0" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <ItemsControl Margin="15 0" ItemsSource="{Binding Swatches}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type materialDesignColors:Swatch}">
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}" Padding="0" Height="18" Width="18" 
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=DataContext.ApplyPrimaryCommand, Mode=OneTime}" CommandParameter="{Binding}">
+                                                <materialDesign:PackIcon Kind="ColorLens" Cursor="Hand">
+                                                    <materialDesign:PackIcon.Foreground>
+                                                        <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
+                                                    </materialDesign:PackIcon.Foreground>
+                                                </materialDesign:PackIcon>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <ToggleButton  Margin="8 0 16 0" Cursor="Hand" Command="{Binding ToggleBaseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}"/>
+                            </StackPanel>
+                        </Grid>
+                        <Grid >
+                            <StackPanel  Orientation="Horizontal" Margin="10 0" HorizontalAlignment="Left">
+                                <TextBlock Text="内网IP:" VerticalAlignment="Center" Margin="10"></TextBlock>
+                                <TextBox Text="{Binding ConnentIP.SInIP,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="100" VerticalAlignment="Center" Margin="10"></TextBox>
+                                <TextBlock Text="内网端口:" VerticalAlignment="Center" Margin="10"></TextBlock>
+                                <TextBox Text="{Binding ConnentIP.SInPort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="50" VerticalAlignment="Center" Margin="10"></TextBox>
+                                <TextBlock Text="外网IP:" VerticalAlignment="Center" Margin="10"></TextBlock>
+                                <TextBox Text="{Binding ConnentIP.OutIP}" Width="100" IsEnabled="False" VerticalAlignment="Center" Margin="10"></TextBox>
+                                <TextBlock Text="外网端口:" VerticalAlignment="Center" Margin="10"></TextBlock>
+                                <TextBox Text="{Binding ConnentIP.SOutPort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="50" VerticalAlignment="Center" Margin="10"></TextBox>
+                                <Button Command="{Binding StartCommand}" Content="添加" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="60"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ItemsControl ItemsSource="{Binding ConnentIP.ConnentPorts}" Margin="10" Grid.IsSharedSizeScope="True">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type domain:ConnentPort}">
+                                        <Border x:Name="Border" Padding="8"  BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}" ToolTip="{Binding ErrMsg}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <ToggleButton x:Name="Toggle" VerticalAlignment="Center" Style="{StaticResource MaterialDesignActionDarkToggleButton}" Content="{Binding Index}" >
+                                                    <materialDesign:ToggleButtonAssist.OnContent>
+                                                        <materialDesign:PackIcon Kind="WindowClose" />
+                                                    </materialDesign:ToggleButtonAssist.OnContent>
+                                                </ToggleButton>
+                                                <StackPanel Margin="8 0 0 0" Grid.Column="1">
+                                                    <TextBlock >
+                                                        <Run Text="Instances:" />
+                                                        <Run Text="{Binding Count}" />
+                                                        <Run Text="  In:" />
+                                                        <Run Text="{Binding In,Converter={StaticResource cvt1}}" />
+                                                        <Run Text="  Out:" />
+                                                        <Run Text="{Binding Out,Converter={StaticResource cvt1}}" />
+                                                    </TextBlock>
+                                                    <TextBlock x:Name="tb2"  Foreground="Red">
+                                                        <Run Text="{Binding InIP}" />
+                                                        <Run Text=":" />
+                                                        <Run Text="{Binding InPort}" />
+                                                        <Run Text=" -> " />
+                                                        <Run Text="{Binding OutIP}" />
+                                                        <Run Text=":" />
+                                                        <Run Text="{Binding OutPort}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <Button Opacity="0.01" CommandParameter="{Binding }"
+                                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=DataContext.CloseCommand, Mode=OneTime}"/>
+
+                                                <Button Grid.Column="2" CommandParameter="{Binding }" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="->" 
+                                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=DataContext.ShowCommand, Mode=OneTime}"/>
+                                            </Grid>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Toggle" Property="IsChecked" Value="True" />
+                                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding State}" Value="1">
+                                                <Setter TargetName="tb2" Property="Foreground" Value="Green"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <DataGrid Margin="10" ItemsSource="{Binding ConnentPort.ConnectMap}" CanUserAddRows="False" IsReadOnly="True" 
+                              AutoGenerateColumns="False" Background="{x:Null}" >
+                                <DataGrid.Columns>
+                                    <materialDesign:DataGridTextColumn  Binding="{Binding Index}"  Header="序号"/>
+                                    <materialDesign:DataGridTextColumn  Binding="{Binding Outip}"  Header="对象地址"/>
+                                    <materialDesign:DataGridTextColumn  Binding="{Binding StartTime, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"  Header="连接时间"/>
+                                    <materialDesign:DataGridTextColumn  Binding="{Binding In,Converter={StaticResource cvt1}}"  Header="发送数据"/>
+                                    <materialDesign:DataGridTextColumn  Binding="{Binding Out,Converter={StaticResource cvt1}}"  Header="接收数据"/>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                    </StackPanel>
+
+                    <WrapPanel  Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                        <TextBlock Foreground="Red" Text="{Binding ConnentIP.ErrMsg}" />
+
+                    </WrapPanel>
+                </Grid>
+            </materialDesign:DialogHost>
+        </Grid>
     </Grid>
 </Window>

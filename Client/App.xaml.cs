@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Helper;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -27,6 +28,7 @@ namespace Client
                 MessageBox.Show("程序已在运行中!");
                 Environment.Exit(0);
             }
+            Res.LogHelper = new LogHelper("log.txt");
         }
     }
 }
