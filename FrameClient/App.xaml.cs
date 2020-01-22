@@ -21,7 +21,7 @@ namespace FrameClient
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            Res.mutex = new Mutex(true, "Pipelined terminal", out bool ret);
+            Res.mutex = new Mutex(true, "FrameClient", out bool ret);
             if (!ret)
             {
                 MessageBox.Show("程序已在运行中!");
@@ -30,10 +30,4 @@ namespace FrameClient
         }
     }
 
-    public static class Res
-    {
-        public static Mutex mutex;
-
-        public static string version = "1.0.0";
-    }
 }

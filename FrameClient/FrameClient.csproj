@@ -104,6 +104,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Res.cs" />
     <Compile Include="Socket\Map\Hosts.cs" />
     <Compile Include="Socket\Models\ClientModel.cs" />
     <Compile Include="Util\LogHelper.cs" />
