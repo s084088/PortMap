@@ -117,12 +117,20 @@ namespace Util
                     }
                     catch (Exception ex)
                     {
-                        ns1.Dispose();
-                        ns2.Dispose();
-                        tc1.Close();
-                        tc2.Close();
-                        tc1.Dispose();
-                        tc2.Dispose();
+                        try
+                        {
+                            ns1.Dispose();
+                            tc1.Close();
+                            tc1.Dispose();
+                        }
+                        catch { }
+                        try
+                        {
+                            ns2.Dispose();
+                            tc2.Close();
+                            tc2.Dispose();
+                        }
+                        catch { }
                         LogHelper.Logger("连接关闭 " + ex.Message);
                         break;
                     }

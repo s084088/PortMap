@@ -4,21 +4,16 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Client.Convers
 {
-    /// <summary>
-    /// 显示转换器
-    /// </summary>
-    public class EnableConver : IValueConverter
+    public class VisibleConver : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (parameter == null ? 0 : System.Convert.ToInt32(parameter)) == System.Convert.ToInt32(value) ;
-
-
-            
+            return value == null ? Visibility.Hidden : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

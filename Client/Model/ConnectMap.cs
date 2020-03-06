@@ -69,14 +69,19 @@ namespace Client.Model
             ConnentPort.SetOut(v);
         }
 
-        public void Stop()
+        public void Stop(bool del = true)
         {
-            InClient.GetStream().Dispose();
-            OutClient.GetStream().Dispose();
-            InClient.Close();
-            OutClient.Close();
-            InClient.Dispose();
-            OutClient.Dispose();
+            if (del) Res.RunUIAction(() => ConnentPort.ConnectMaps.Remove(this));
+            try
+            {
+                InClient.GetStream().Dispose();
+                OutClient.GetStream().Dispose();
+                InClient.Close();
+                OutClient.Close();
+                InClient.Dispose();
+                OutClient.Dispose();
+            }
+            catch { }
         }
     }
 }

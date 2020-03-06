@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <conv:FlowConver x:Key="cvt1"/>
             <conv:EnableConver x:Key="cvt2"/>
+            <conv:VisibleConver x:Key="cvt3"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid >
@@ -77,19 +78,43 @@
 
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="400"/>
+                                <ColumnDefinition Width="340"/>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <ItemsControl ItemsSource="{Binding ConnentIP.ConnentPorts}" Margin="10" Grid.IsSharedSizeScope="True">
-                                <ItemsControl.ItemTemplate>
+                            <ListBox ItemsSource="{Binding ConnentIP.ConnentPorts}"  Margin="10" SelectedItem="{Binding ConnentPort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Grid>
+                                                        <Border x:Name="G1" Margin="0" Background="{x:Null}"  HorizontalAlignment="Left">
+                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"  />
+                                                        </Border>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="true">
+                                                            <Setter TargetName="G1" Property="Background" Value="#227F7F7F"></Setter>
+                                                        </Trigger>
+                                                        <Trigger Property="IsSelected" Value="true">
+                                                            <Setter TargetName="G1" Property="Background" Value="#557F7F7F"></Setter>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
                                     <DataTemplate DataType="{x:Type domain:ConnentPort}">
                                         <Border x:Name="Border" Padding="8"  BorderThickness="0 0 0 1" BorderBrush="{DynamicResource MaterialDesignDivider}" ToolTip="{Binding ErrMsg}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto"/>
                                                     <ColumnDefinition />
-                                                    <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
 
                                                 <ToggleButton x:Name="Toggle" VerticalAlignment="Center" Style="{StaticResource MaterialDesignActionDarkToggleButton}" Content="{Binding Index}" >
@@ -97,7 +122,7 @@
                                                         <materialDesign:PackIcon Kind="WindowClose" />
                                                     </materialDesign:ToggleButtonAssist.OnContent>
                                                 </ToggleButton>
-                                                <StackPanel Margin="8 0 0 0" Grid.Column="1">
+                                                <StackPanel Margin="8 0 8 0" Grid.Column="1">
                                                     <TextBlock >
                                                         <Run Text="Instances:" />
                                                         <Run Text="{Binding Count}" />
@@ -119,25 +144,26 @@
                                                 <Button Opacity="0.01" CommandParameter="{Binding }"
                                                         Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=DataContext.CloseCommand, Mode=OneTime}"/>
 
-                                                <Button Grid.Column="2" CommandParameter="{Binding }" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="->" 
-                                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}, Path=DataContext.ShowCommand, Mode=OneTime}"/>
                                             </Grid>
                                         </Border>
                                         <DataTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter TargetName="Toggle" Property="IsChecked" Value="True" />
-                                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
                                             </Trigger>
                                             <DataTrigger Binding="{Binding State}" Value="1">
                                                 <Setter TargetName="tb2" Property="Foreground" Value="Green"/>
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
                                     </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
 
-                            <DataGrid Margin="10" ItemsSource="{Binding ConnentPort.ConnectMap}" CanUserAddRows="False" IsReadOnly="True" 
-                              AutoGenerateColumns="False" Background="{x:Null}" >
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            
+                            
+
+
+                            <DataGrid Margin="10" Grid.Column="2" ItemsSource="{Binding ConnentPort.ConnectMaps}" CanUserAddRows="False" IsReadOnly="True" 
+                              AutoGenerateColumns="False" Background="{x:Null}" Visibility="{Binding ConnentPort,Converter={StaticResource cvt3}}" >
                                 <DataGrid.Columns>
                                     <materialDesign:DataGridTextColumn  Binding="{Binding Index}"  Header="序号"/>
                                     <materialDesign:DataGridTextColumn  Binding="{Binding Outip}"  Header="对象地址"/>

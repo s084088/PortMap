@@ -19,6 +19,8 @@ namespace Server.Socket.Map
         public int ClientPort;      //内网端口
 
         TcpClient waitClient;       //候选链接
+        TcpListener t1;
+        TcpListener t2;
 
         //连接池
         public List<ConnentMap> connectMaps = new List<ConnentMap>();
@@ -35,14 +37,14 @@ namespace Server.Socket.Map
         /// </summary>
         public void StartLisen1()
         {
-            TcpListener tl = new TcpListener(IPAddress.Any, InPort);
-            tl.Start();
+            t1 = new TcpListener(IPAddress.Any, InPort);
+            t1.Start();
 
             while (true)
             {
                 try
                 {
-                    TcpClient tc = tl.AcceptTcpClient();
+                    TcpClient tc = t1.AcceptTcpClient();
                     //接收到连接
                     waitClient = tc;
                 }
@@ -58,13 +60,13 @@ namespace Server.Socket.Map
         /// </summary>
         public void StartLisen2()
         {
-            TcpListener tl = new TcpListener(IPAddress.Any, OutPort);
-            tl.Start();
+            t2 = new TcpListener(IPAddress.Any, OutPort);
+            t2.Start();
             while (true)
             {
                 try
                 {
-                    TcpClient tc = tl.AcceptTcpClient();
+                    TcpClient tc = t2.AcceptTcpClient();
                     IPEndPoint iPEndPoint = tc.Client.RemoteEndPoint as IPEndPoint;
                     string IP = iPEndPoint.Address.ToString();
                     int Port = iPEndPoint.Port;
@@ -101,16 +103,24 @@ namespace Server.Socket.Map
         /// <param name="serverModel"></param>
         public void DisClientConn()
         {
+            foreach (ConnentMap connentMap in connectMaps) connentMap.DisClientConn();
             try
             {
-                foreach (ConnentMap connentMap in connectMaps) connentMap.DisClientConn();
-                connectMaps.Clear();
-                try { connentIP.connentPorts.Remove(this); } catch { }
+                t1.Stop();
             }
             catch (Exception ex)
             {
-                LogHelper.Logger("端口类回收资源出错 " + ex.Message);
+                LogHelper.Logger("内网端口类回收资源出错 " + ex.Message);
             }
+            try
+            {
+                t2.Stop();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Logger("外网端口类回收资源出错 " + ex.Message);
+            }
+            connectMaps.Clear();
         }
     }
 }

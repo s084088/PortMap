@@ -38,7 +38,6 @@ namespace Client.ViewModel
         public ICommand ConnectCommand { get; set; }
         public ICommand DisConnectCommand { get; set; }
         public ICommand StartCommand { get; set; }
-        public ICommand ShowCommand { get; set; }
         public ICommand CloseCommand { get; set; }
 
         #endregion
@@ -55,7 +54,6 @@ namespace Client.ViewModel
             ConnectCommand = new CommandBase(l => ConnentIP.Start(), k => ConnentIP.State == 0);
             DisConnectCommand = new CommandBase(l => ConnentIP.Stop(), k => ConnentIP.State == 1);
             StartCommand = new CommandBase(l => ConnentIP.StartPort());
-            ShowCommand = new CommandBase(l => ConnentPort = (ConnentPort)l);
             CloseCommand = new CommandBase(l => ConnentIP.Close((ConnentPort)l));
             ApplyPrimary(Swatches[Math.Abs(Guid.NewGuid().GetHashCode()) % Swatches.Count]);
         }

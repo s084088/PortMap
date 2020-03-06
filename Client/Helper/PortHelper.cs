@@ -142,6 +142,11 @@ namespace Client.Helper
                     }
                     catch (Exception ex)
                     {
+                        try
+                        {
+                            ((ConnectMap)obj).Stop();
+                        }
+                        catch { }
                         ns1.Dispose();
                         ns2.Dispose();
                         tc1.Close();
@@ -155,6 +160,11 @@ namespace Client.Helper
             }
             catch (Exception ex)
             {
+                try
+                {
+                    ((ConnectMap)obj).Stop();
+                }
+                catch { }
                 Res.LogHelper.Info("内网主动断开 " + ex.Message);
             }
         }
@@ -184,6 +194,11 @@ namespace Client.Helper
                     }
                     catch (Exception ex)
                     {
+                        try
+                        {
+                            ((ConnectMap)obj).Stop();
+                        }
+                        catch { }
                         ns1.Dispose();
                         ns2.Dispose();
                         tc1.Close();
@@ -197,6 +212,11 @@ namespace Client.Helper
             }
             catch (Exception ex)
             {
+                try
+                {
+                    ((ConnectMap)obj).Stop();
+                }
+                catch { }
                 Res.LogHelper.Info("转发方法出错 " + ex.Message);
             }
         }

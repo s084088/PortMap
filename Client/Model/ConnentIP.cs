@@ -19,7 +19,7 @@ namespace Client.Model
         private ObservableCollection<ConnentPort> connentPorts = new ObservableCollection<ConnentPort>();
         private long @in = 0;
         private long @out = 0;
-        private string outIP = "localhost";
+        private string outIP = "port.jiyiwm.cn";
         private int outPort = 4999;
         private int state = 0;
         public TcpClient tc;   //控制器
@@ -61,7 +61,7 @@ namespace Client.Model
 
         public void Close(ConnentPort l)
         {
-            l.ErrStop();
+            l.Stop();
             connentPorts.Remove(l);
         }
 

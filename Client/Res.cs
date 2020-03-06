@@ -15,5 +15,14 @@ namespace Client
         public static string version = "1.0.1";
 
         public static LogHelper LogHelper;
+
+        public static void RunUIAction(Action action)
+        {
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                SynchronizationContext.SetSynchronizationContext(new System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
+                SynchronizationContext.Current.Post(pl => action.Invoke(), null);
+            });
+        }
     }
 }

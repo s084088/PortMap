@@ -102,13 +102,13 @@ namespace Client.Model
         /// <summary>
         /// 主动停止
         /// </summary>
-        public async void Stop()
+        public void Stop()
         {
             string[] ss = {
                 "s_Stop",
                 ID,
                 };
-            await connentIP.kz.H_SendAsync(string.Join(",", ss));
+            connentIP.kz.H_Send(string.Join(",", ss));
             Close();
         }
 
@@ -117,8 +117,8 @@ namespace Client.Model
         /// </summary>
         private void Close()
         {
-            foreach (ConnectMap connectMap in ConnectMaps) connectMap.Stop();
-            ConnectMaps.Clear();
+            foreach (ConnectMap connectMap in ConnectMaps) connectMap.Stop(false);
+            Res.RunUIAction(() => ConnectMaps.Clear());
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Client.Model
                 Index = indexCount++,
             };
             Count++;
-            ConnectMaps.Add(connectMap);
+            Res.RunUIAction(() => ConnectMaps.Add(connectMap));
             PortHelper.Lianjie(connectMap);
         }
     }

@@ -22,20 +22,22 @@ namespace Server.Socket.Map
             try
             {
                 inClient.GetStream().Dispose();
-                outClient.GetStream().Dispose();
                 inClient.Close();
-                outClient.Close();
                 inClient.Dispose();
-                outClient.Dispose();
-                try
-                {
-                    ConnentPort.connectMaps.Remove(this);
-                }
-                catch { }
             }
             catch (Exception ex)
             {
-                LogHelper.Logger("转发模块回收资源出错 " + ex.Message);
+                LogHelper.Logger("内网转发模块回收资源出错 " + ex.Message);
+            }
+            try
+            {
+                outClient.GetStream().Dispose();
+                outClient.Close();
+                outClient.Dispose();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Logger("外网转发模块回收资源出错 " + ex.Message);
             }
         }
     }

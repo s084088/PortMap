@@ -99,7 +99,11 @@ namespace Server.Socket.Map
             else if (r[0] == "s_Stop")    //申请开启服务
             {
                 ConnentPort connentPort = connentPorts.FirstOrDefault(l => l.ID == r[1]);
-                connentPort.DisClientConn();
+                if(connentPort != null)
+                {
+                    connentPort.DisClientConn();
+                    connentPorts.Remove(connentPort);
+                }
             }
         }
 
@@ -112,6 +116,9 @@ namespace Server.Socket.Map
             try
             {
                 foreach (ConnentPort connentPort in connentPorts) connentPort.DisClientConn();
+                ns.Dispose();
+                tc.Close();
+                tc.Dispose();
                 connentPorts.Clear();
                 connentHost.serverModels.Remove(this);
             }

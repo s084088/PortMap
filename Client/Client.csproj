@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="Convers\FlowConver.cs" />
     <Compile Include="Convers\EnableConver.cs" />
+    <Compile Include="Convers\VisibleConver.cs" />
     <Compile Include="Helper\LogHelper.cs" />
     <Compile Include="Helper\OtherHelper.cs" />
     <Compile Include="Helper\PortHelper.cs" />
