@@ -81,14 +81,15 @@ namespace Server.Socket.Map
                         if (i > 1000) throw new Exception("等待客户端失败");
                     }
                     //接收到连接
-                    PortHelper.Lianjie(tc, waitClient);
                     //检查连接情况
-                    connectMaps.Add(new ConnentMap
+                    ConnentMap connentMap = new ConnentMap
                     {
                         inClient = tc,
                         outClient = waitClient,
                         ConnentPort = this,
-                    });
+                    };
+                    connentMap.Lianjie();
+                    connectMaps.Add(connentMap);
                 }
                 catch
                 {

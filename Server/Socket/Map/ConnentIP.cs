@@ -16,6 +16,7 @@ namespace Server.Socket.Map
         public NetworkStream ns;//主链接
         public string IP;        //对应客户端IP
         public int Port;         //对应客户端端口
+        public string machineCode;//机器码
         public List<ConnentPort> connentPorts = new List<ConnentPort>();
         public string key = KeyHelper.GenerateKey();
 
@@ -61,6 +62,8 @@ namespace Server.Socket.Map
                 if (r[1] != "1.0.1")
                 {
                     ns.H_Send("fail,客户端版本过低 请更新版本");
+                    connentHost.serverModels.FirstOrDefault(l => l.machineCode == r[5])?.DisClientConn();
+                    machineCode = r[5];
                 }
                 else
                 {
@@ -96,10 +99,10 @@ namespace Server.Socket.Map
                 }
             }
 
-            else if (r[0] == "s_Stop")    //申请开启服务
+            else if (r[0] == "s_Stop")    //申请关闭服务
             {
                 ConnentPort connentPort = connentPorts.FirstOrDefault(l => l.ID == r[1]);
-                if(connentPort != null)
+                if (connentPort != null)
                 {
                     connentPort.DisClientConn();
                     connentPorts.Remove(connentPort);
